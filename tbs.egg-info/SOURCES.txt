@@ -1,0 +1,6 @@
+tbs.egg-info/PKG-INFO
+tbs.egg-info/SOURCES.txt
+tbs.egg-info/dependency_links.txt
+tbs.egg-info/entry_points.txt
+tbs.egg-info/requires.txt
+tbs.egg-info/top_level.txt

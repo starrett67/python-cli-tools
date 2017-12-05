@@ -1,1 +1,2 @@
+https://github.com/3Blades/python-sdk/archive/master.zip
 click==6.7
