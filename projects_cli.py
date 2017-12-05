@@ -1,7 +1,15 @@
 import swagger_client
 import click
 
-# TODO: Why is retrieve missing from the SDK?
+
+def detail(ctx, *args, **kwargs):
+    namespace = kwargs['namespace']
+    swagger_client.configuration.api_key['Authorization'] = ctx.obj['token']
+    swagger_client.configuration.api_key_prefix['Authorization'] = 'Bearer'
+    project_name = click.prompt("Project")
+    projects_api = swagger_client.ProjectsApi()
+    response = projects_api.projects_read(namespace, project_name)
+    return response
 
 
 def list(ctx, *args, **kwargs):

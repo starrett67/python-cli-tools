@@ -13,7 +13,8 @@ def invoke_command(ctx, module_name, *args, **kwargs):
         click.echo(f"Invalid sub-command: {sub_command}")
         raise
     response = command_func(ctx, *args, **kwargs)
-    pprint(response)
+    if response is not None:
+        pprint(response)
 
 
 @click.group()
