@@ -10,6 +10,6 @@ setup(
     dependency_links=["git@github.com:3Blades/python-sdk.git"],
     entry_points="""
         [console_scripts]
-        tbs=tbs:cli
+        tbs=tbs:main
     """
 )

@@ -1,4 +1,4 @@
 
         [console_scripts]
-        tbs=tbs:cli
+        tbs=tbs:main
     
