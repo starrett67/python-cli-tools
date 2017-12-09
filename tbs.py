@@ -33,11 +33,11 @@ def cli(ctx):
 
 
 @click.command()
-@click.argument("sub_command")
 @click.option("--username")
 @click.option("--password")
 @click.pass_context
-def auth(ctx, *args, **kwargs):
+def login(ctx, *args, **kwargs):
+    kwargs['sub_command'] = "login"
     invoke_command(ctx, "auth_cli", *args, **kwargs)
 
 
@@ -65,7 +65,7 @@ def deployments(ctx, *args, **kwargs):
     invoke_command(ctx, "deployments_cli", *args, **kwargs)
 
 
-cli.add_command(auth)
+cli.add_command(login)
 cli.add_command(projects)
 cli.add_command(deployments)
 
