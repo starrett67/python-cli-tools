@@ -29,12 +29,10 @@ def cli(ctx):
             ctx.obj['token'] = token_json['token']
 
 
-# TODO: This always prompts for username and password, even if a token exists already.
-# Make that conditional
 @click.command()
 @click.argument("sub_command")
-@click.option("--username", prompt="Username")
-@click.option("--password", prompt="Password", hide_input=True)
+@click.option("--username")
+@click.option("--password")
 @click.pass_context
 def auth(ctx, *args, **kwargs):
     invoke_command(ctx, "auth_cli", *args, **kwargs)
