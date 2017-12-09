@@ -4,6 +4,9 @@ import click
 from pprint import pprint
 from pathlib import Path
 
+# TODO: Clean up how arguments/options are passed to subcommands.
+# It's not great at the moment
+
 
 def invoke_command(ctx, module_name, *args, **kwargs):
     sub_command = kwargs['sub_command']
@@ -30,11 +33,11 @@ def cli(ctx):
 
 
 @click.command()
-@click.argument("sub_command")
 @click.option("--username")
 @click.option("--password")
 @click.pass_context
-def auth(ctx, *args, **kwargs):
+def login(ctx, *args, **kwargs):
+    kwargs['sub_command'] = "login"
     invoke_command(ctx, "auth_cli", *args, **kwargs)
 
 
@@ -50,8 +53,21 @@ def projects(ctx, *args, **kwargs):
     invoke_command(ctx, "projects_cli", *args, **kwargs)
 
 
-cli.add_command(auth)
+@click.command()
+@click.argument("sub_command")
+@click.option("--namespace", prompt="Namespace")
+@click.pass_context
+# @click.option("--framework")
+# @click.option("--files")
+def deployments(ctx, *args, **kwargs):
+    if "token" not in ctx.obj:
+        click.echo("Make sure you've logged in first!")
+    invoke_command(ctx, "deployments_cli", *args, **kwargs)
+
+
+cli.add_command(login)
 cli.add_command(projects)
+cli.add_command(deployments)
 
 
 def main():
