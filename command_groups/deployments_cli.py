@@ -3,6 +3,11 @@ import click
 import swagger_client
 
 
+RUNTIME_ALIASES = {'python2.7': "04a08704-34a2-45c7-9a5e-1b42faed169a"}
+FRAMEWORK_ALIASES = {'tensorflow': "8fc02450-a3e9-4a98-9b66-173e489e6b55",
+                     'tensorflow1.4': "8fc02450-a3e9-4a98-9b66-173e489e6b55"}
+
+
 def deploy(ctx, *args, **kwargs):
     namespace = kwargs.get('namespace') or ctx.obj.get('namespace')
     if namespace is None:
@@ -26,8 +31,8 @@ def deploy(ctx, *args, **kwargs):
 
     deployment_data = {'name': deployment_name,
                        'config': config,
-                       'runtime': runtime,
-                       'framework': framework}
+                       'runtime': RUNTIME_ALIASES[runtime],
+                       'framework': FRAMEWORK_ALIASES[framework]}
 
     deploy_data = swagger_client.DeploymentData(**deployment_data)
 
