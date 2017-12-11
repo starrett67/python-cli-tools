@@ -14,7 +14,7 @@ from pathlib import Path
 def invoke_command(ctx, module_name, *args, **kwargs):
     sub_command = kwargs['sub_command']
     try:
-        command_func = getattr(import_module(module_name), sub_command)
+        command_func = getattr(import_module(f"command_groups.{module_name}"), sub_command)
     except AttributeError:
         click.echo(f"Invalid sub-command: {sub_command}")
         raise
@@ -66,7 +66,6 @@ def projects(ctx, *args, **kwargs):
 # @click.option("--files")
 def deployments(ctx, *args, **kwargs):
     if "token" not in ctx.obj:
-        click.echo(ctx.obj)
         click.echo("Make sure you've logged in first!")
     invoke_command(ctx, "deployments_cli", *args, **kwargs)
 
