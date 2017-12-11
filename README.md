@@ -12,14 +12,14 @@ If you would like to use the CLI tools with our dev environment (or any other en
 ## Usage
 
 ### Login
-`tbs login` -> You will be prompted for your username and password. This will create a `threeblades.token` file in your `$HOME` directory that will be used for subsequent logins. Delete this file if you would like to login as a different user, or to a different environment.
+`tbs-cli login` -> You will be prompted for your username and password. This will create a `threeblades.token` file in your `$HOME` directory that will be used for subsequent logins. Delete this file if you would like to login as a different user, or to a different environment.
 
 ### Projects
-`tbs projects <sub command>`
+`tbs-cli projects <sub command>`
 Currently implemented sub-commands are: `list`, `create`, `detail`, and `delete`. You will be prompted for any required arguments. Flags (`--name`, etc.) will come at a later date.
 
 ### Deployments
-`tbs deployments <sub command>`
+`tbs-cli deployments <sub command>`
 Currently accepted sub commands are: `create`.
 
 Currently available runtimes:
