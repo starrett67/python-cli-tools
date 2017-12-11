@@ -1,3 +1,4 @@
+import time
 import click
 import swagger_client
 
@@ -38,4 +39,10 @@ def deploy(ctx, *args, **kwargs):
     response = deployments_api.deployments_deploy(namespace=namespace,
                                                   project=project_name,
                                                   deployment=initial_response.name)
-    return response
+    click.echo("Deploying...")
+    time.sleep(10)
+
+    final_response = deployments_api.deployments_read(project=project_name,
+                                                      namespace=namespace,
+                                                      deployment=initial_response.name)
+    return final_response
