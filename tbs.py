@@ -1,17 +1,20 @@
 import os
 import json
 import click
+from importlib import import_module
 from pprint import pprint
 from pathlib import Path
 
 # TODO: Clean up how arguments/options are passed to subcommands.
 # It's not great at the moment
 
+# TODO: Refactor to keep it DRY
+
 
 def invoke_command(ctx, module_name, *args, **kwargs):
     sub_command = kwargs['sub_command']
     try:
-        command_func = getattr(__import__(module_name), sub_command)
+        command_func = getattr(import_module(module_name), sub_command)
     except AttributeError:
         click.echo(f"Invalid sub-command: {sub_command}")
         raise
@@ -24,12 +27,13 @@ def invoke_command(ctx, module_name, *args, **kwargs):
 @click.pass_context
 def cli(ctx):
     home_dir = os.getenv("HOME")
-    token_file = Path(home_dir, ".threeblades.token")
-    if token_file.exists():
-        with token_file.open() as tok_file:
-            line = tok_file.read()
-            token_json = json.loads(line)
-            ctx.obj['token'] = token_json['token']
+    config_file = Path(home_dir, ".threeblades.config")
+    if config_file.exists():
+        with config_file.open() as conf_file:
+            line = conf_file.read()
+            conf_json = json.loads(line)
+            ctx.obj['token'] = conf_json['token']
+            ctx.obj['namespace'] = conf_json.get('namespace')
 
 
 @click.command()
@@ -55,12 +59,14 @@ def projects(ctx, *args, **kwargs):
 
 @click.command()
 @click.argument("sub_command")
-@click.option("--namespace", prompt="Namespace")
+@click.option("--namespace")
+@click.option("--project")
 @click.pass_context
 # @click.option("--framework")
 # @click.option("--files")
 def deployments(ctx, *args, **kwargs):
     if "token" not in ctx.obj:
+        click.echo(ctx.obj)
         click.echo("Make sure you've logged in first!")
     invoke_command(ctx, "deployments_cli", *args, **kwargs)
 
