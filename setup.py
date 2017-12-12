@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 NAME = "tbs-cli"
-VERSION = "0.0.3"
+VERSION = "0.0.4"
 REQUIRES = ["click == 6.7", "tbs-sdk >= 0.0.1"]
 
 setup(
@@ -15,7 +15,7 @@ setup(
     keywords=["3Blades", "Data Science"],
     packages=["command_groups", "tbscli"],
     install_requires=REQUIRES,
-    entry_points={'console_scripts': ["tbs-cli=tbscli.tbs:main"]},
+    entry_points={'console_scripts': ["tbs=tbscli.tbs:main"]},
     include_package_data=True,
     license="BSD 3-clause"
 )
