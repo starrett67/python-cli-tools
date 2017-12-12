@@ -47,6 +47,9 @@ def login_cmd(ctx, *args, **kwargs):
 
 
 class AuthCLI(click.Group):
+    def __init__(self, *args, **kwargs):
+        kwargs['help'] = "Manage auth actions"
+        super(AuthCLI, self).__init__(*args, **kwargs)
     def list_commands(self, ctx):
         commands = [key.replace("_cmd", "") for key in globals() if key.endswith("_cmd")]
         return commands

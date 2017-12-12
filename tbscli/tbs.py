@@ -20,7 +20,7 @@ class ThreeBladesCLI(click.MultiCommand):
         return cmd_group
 
 
-my_cli = ThreeBladesCLI(help="Hello world")
+my_cli = ThreeBladesCLI(help="Command line tools for 3Blades")
 
 
 def main():

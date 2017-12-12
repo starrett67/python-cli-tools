@@ -8,7 +8,6 @@ FRAMEWORK_ALIASES = {'tensorflow': "8fc02450-a3e9-4a98-9b66-173e489e6b55",
 
 
 @click.command(help="This is the deployment help")
-@instantiate_context
 # TODO: Is there a cleaner way to define all these options? This is gross.
 # TODO: Define help for all these flags
 @click.option("--namespace")
@@ -18,6 +17,7 @@ FRAMEWORK_ALIASES = {'tensorflow': "8fc02450-a3e9-4a98-9b66-173e489e6b55",
 @click.option("--files")
 @click.option("--runtime")
 @click.option("--framework")
+@instantiate_context
 @print_result
 def deploy_cmd(ctx, *args, **kwargs):
     namespace = kwargs.get('namespace') or ctx.obj.get('namespace')
@@ -66,6 +66,10 @@ def deploy_cmd(ctx, *args, **kwargs):
 
 # TODO: Is there a way to do this with inheritance? We lose context of globals()...
 class DeploymentsCLI(click.Group):
+    def __init__(self, *args, **kwargs):
+        kwargs['help'] = "Manage model deployments"
+        super(DeploymentsCLI, self).__init__(*args, **kwargs)
+
     def list_commands(self, ctx):
         commands = [key.replace("_cmd", "") for key in globals() if key.endswith("_cmd")]
         return commands

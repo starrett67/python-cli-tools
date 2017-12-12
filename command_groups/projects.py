@@ -69,6 +69,10 @@ def delete_cmd(ctx, *args, **kwargs):
 
 
 class ProjectsCLI(click.Group):
+    def __init__(self, *args, **kwargs):
+        kwargs['help'] = "Manage account projects"
+        super(ProjectsCLI, self).__init__(*args, **kwargs)
+
     def list_commands(self, ctx):
         commands = [key.replace("_cmd", "") for key in globals() if key.endswith("_cmd")]
         return commands
