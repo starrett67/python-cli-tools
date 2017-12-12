@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 NAME = "tbs-cli"
-VERSION = "0.0.4"
+VERSION = "0.0.5"
 REQUIRES = ["click == 6.7", "tbs-sdk >= 0.0.1"]
 
 setup(
