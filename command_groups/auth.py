@@ -3,9 +3,13 @@ import json
 import click
 import swagger_client
 from pathlib import Path
+from tbscli.decorators import instantiate_context, print_result
 
 
-def login(ctx, *args, **kwargs):
+@click.command()
+@instantiate_context
+@print_result
+def login_cmd(ctx, *args, **kwargs):
     username = kwargs.get('username')
     password = kwargs.get('password')
     home_dir = os.getenv("HOME")
@@ -38,5 +42,14 @@ def login(ctx, *args, **kwargs):
         click.echo(f"Welcome {username}.")
 
     click.echo("Login successful")
-    click.echo(f"Using {ctx.obj.get('namespace')} as a default namespace. "
-               f"Override this with the --namespace flag.")
+    return (f"Using {ctx.obj.get('namespace')} as a default namespace. "
+            f"Override this with the --namespace flag.")
+
+
+class AuthCLI(click.Group):
+    def list_commands(self, ctx):
+        commands = [key.replace("_cmd", "") for key in globals() if key.endswith("_cmd")]
+        return commands
+
+    def get_command(self, ctx, cmd_name):
+        return globals().get(cmd_name + "_cmd")
