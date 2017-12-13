@@ -130,6 +130,28 @@ def detail_cmd(ctx, *args, **kwargs):
     return response
 
 
+@click.command(help="List deployments for a given project")
+@click.option("--namespace")
+@click.option("--project")
+@instantiate_context
+@print_result
+def list_cmd(ctx, *args, **kwargs):
+    namespace = kwargs.get('namespace') or ctx.obj.get('namespace')
+    if namespace is None:
+        namespace = click.prompt("Namespace", type=str)
+
+    project_name = kwargs.get("project")
+    if project_name is None:
+        project_name = click.prompt("Project", type=str)
+
+    tbs_client.configuration.api_key['Authorization'] = ctx.obj['token']
+    tbs_client.configuration.api_key_prefix['Authorization'] = 'Bearer'
+    deployments_api = tbs_client.DeploymentsApi()
+    response = deployments_api.deployments_list(namespace=namespace,
+                                                project=project_name)
+    return response
+
+
 # TODO: Is there a way to do this with inheritance? We lose context of globals()...
 class DeploymentsCLI(click.Group):
     def __init__(self, *args, **kwargs):
