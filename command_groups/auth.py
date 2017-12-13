@@ -1,7 +1,7 @@
 import os
 import json
 import click
-import swagger_client
+import tbs_client
 from pathlib import Path
 from tbscli.decorators import instantiate_context, print_result
 
@@ -26,8 +26,8 @@ def login_cmd(ctx, *args, **kwargs):
         if not (username and password):
             username = click.prompt("Username", type=str)
             password = click.prompt("Password", type=str, hide_input=True)
-        auth_api = swagger_client.AuthApi()
-        jwt_data = swagger_client.JWTData(username=username,
+        auth_api = tbs_client.AuthApi()
+        jwt_data = tbs_client.JWTData(username=username,
                                           password=password)
         response = auth_api.auth_jwt_token_auth(jwt_data=jwt_data)
 
