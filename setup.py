@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages
 
 NAME = "tbs-cli"
-VERSION = "0.0.5"
-REQUIRES = ["click == 6.7", "tbs-sdk >= 0.0.1"]
+VERSION = "0.0.6"
+REQUIRES = ["click == 6.7", "tbs-sdk >= 0.0.6"]
 
 setup(
     name=NAME,
@@ -11,7 +11,7 @@ setup(
     author="John Griebel",
     author_email="jgriebel@3blades.io",
     url="https://github.com/3Blades/python-cli-tools",
-    download_url = 'https://github.com/3Blades/python-cli-tools/archive/0.0.3.tar.gz',
+    download_url=f'https://github.com/3Blades/python-cli-tools/archive/{VERSION}.tar.gz',
     keywords=["3Blades", "Data Science"],
     packages=["command_groups", "tbscli"],
     install_requires=REQUIRES,

@@ -85,7 +85,7 @@ def delete_cmd(ctx, *args, **kwargs):
 
     deployment_identifier = kwargs.get('id') or kwargs.get('name')
     if deployment_identifier is None:
-        deployment_identifier = click.prompt("Deployment to delete (name)", type=str)
+        deployment_identifier = click.prompt("Deployment to delete", type=str)
 
     # TODO: We do this for every single command. refactor it out?
     tbs_client.configuration.api_key['Authorization'] = ctx.obj['token']
@@ -95,6 +95,39 @@ def delete_cmd(ctx, *args, **kwargs):
                                                   project=project_name,
                                                   deployment=deployment_identifier)
     return response or f"Deployment {deployment_identifier} deleted."
+
+
+@click.command(help="Get details for a deployment given a namespace and project")
+@click.option("--namespace")
+@click.option("--id")
+@click.option("--project")
+@click.option("--name")
+@instantiate_context
+@print_result
+def detail_cmd(ctx, *args, **kwargs):
+    namespace = kwargs.get('namespace') or ctx.obj.get('namespace')
+    if namespace is None:
+        namespace = click.prompt("Namespace", type=str)
+
+    if kwargs['id'] and kwargs["name"]:
+        return "You should only pass one of --name and --id"
+
+    project_name = kwargs.get("project")
+    if project_name is None:
+        project_name = click.prompt("Project", type=str)
+
+    deployment_identifier = kwargs.get('id') or kwargs.get('name')
+    if deployment_identifier is None:
+        deployment_identifier = click.prompt("Deployment", type=str)
+
+    # TODO: We do this for every single command. refactor it out?
+    tbs_client.configuration.api_key['Authorization'] = ctx.obj['token']
+    tbs_client.configuration.api_key_prefix['Authorization'] = 'Bearer'
+    deployments_api = tbs_client.DeploymentsApi()
+    response = deployments_api.deployments_read(namespace=namespace,
+                                                project=project_name,
+                                                deployment=deployment_identifier)
+    return response
 
 
 # TODO: Is there a way to do this with inheritance? We lose context of globals()...
