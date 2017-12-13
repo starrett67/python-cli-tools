@@ -8,7 +8,7 @@ from tbscli.decorators import instantiate_context, print_result
 @click.option("--namespace")
 @instantiate_context
 @print_result
-def detail_cmd(ctx, *args, **kwargs):
+def detail(ctx, *args, **kwargs):
     namespace = kwargs.get('namespace') or ctx.obj['namespace']
     tbs_client.configuration.api_key['Authorization'] = ctx.obj['token']
     tbs_client.configuration.api_key_prefix['Authorization'] = 'Bearer'
@@ -22,7 +22,7 @@ def detail_cmd(ctx, *args, **kwargs):
 @click.option("--namespace")
 @instantiate_context
 @print_result
-def list_cmd(ctx, *args, **kwargs):
+def list(ctx, *args, **kwargs):
     namespace = kwargs.get('namespace') or ctx.obj['namespace']
     tbs_client.configuration.api_key['Authorization'] = ctx.obj['token']
     tbs_client.configuration.api_key_prefix['Authorization'] = 'Bearer'
@@ -35,7 +35,7 @@ def list_cmd(ctx, *args, **kwargs):
 @click.option("--namespace")
 @instantiate_context
 @print_result
-def create_cmd(ctx, *args, **kwargs):
+def create(ctx, *args, **kwargs):
     namespace = kwargs['namespace']
     name = click.prompt("Project name", type=str)
     description = click.prompt("Description", type=str)
@@ -57,7 +57,7 @@ def create_cmd(ctx, *args, **kwargs):
 @click.option("--namespace")
 @instantiate_context
 @print_result
-def delete_cmd(ctx, *args, **kwargs):
+def delete(ctx, *args, **kwargs):
     namespace = kwargs['namespace']
     tbs_client.configuration.api_key['Authorization'] = ctx.obj['token']
     tbs_client.configuration.api_key_prefix['Authorization'] = 'Bearer'
@@ -74,9 +74,9 @@ class ProjectsCLI(click.Group):
         super(ProjectsCLI, self).__init__(*args, **kwargs)
 
     def list_commands(self, ctx):
-        commands = [key.replace("_cmd", "") for key in globals() if key.endswith("_cmd")]
+        commands = [key for key, value in globals().items() if isinstance(value, click.Command)]
         return commands
 
     def get_command(self, ctx, cmd_name):
-        return globals().get(cmd_name + "_cmd")
+        return globals().get(cmd_name)
 

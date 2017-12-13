@@ -19,7 +19,7 @@ FRAMEWORK_ALIASES = {'tensorflow': "8fc02450-a3e9-4a98-9b66-173e489e6b55",
 @click.option("--framework")
 @instantiate_context
 @print_result
-def create_cmd(ctx, *args, **kwargs):
+def create(ctx, *args, **kwargs):
     namespace = kwargs.get('namespace') or ctx.obj.get('namespace')
     if namespace is None:
         namespace = click.prompt("Namespace", type=str)
@@ -71,7 +71,7 @@ def create_cmd(ctx, *args, **kwargs):
 @click.option("--name")
 @instantiate_context
 @print_result
-def delete_cmd(ctx, *args, **kwargs):
+def delete(ctx, *args, **kwargs):
     namespace = kwargs.get('namespace') or ctx.obj.get('namespace')
     if namespace is None:
         namespace = click.prompt("Namespace", type=str)
@@ -104,7 +104,7 @@ def delete_cmd(ctx, *args, **kwargs):
 @click.option("--name")
 @instantiate_context
 @print_result
-def detail_cmd(ctx, *args, **kwargs):
+def detail(ctx, *args, **kwargs):
     namespace = kwargs.get('namespace') or ctx.obj.get('namespace')
     if namespace is None:
         namespace = click.prompt("Namespace", type=str)
@@ -135,7 +135,7 @@ def detail_cmd(ctx, *args, **kwargs):
 @click.option("--project")
 @instantiate_context
 @print_result
-def list_cmd(ctx, *args, **kwargs):
+def list(ctx, *args, **kwargs):
     namespace = kwargs.get('namespace') or ctx.obj.get('namespace')
     if namespace is None:
         namespace = click.prompt("Namespace", type=str)
@@ -159,8 +159,8 @@ class DeploymentsCLI(click.Group):
         super(DeploymentsCLI, self).__init__(*args, **kwargs)
 
     def list_commands(self, ctx):
-        commands = [key.replace("_cmd", "") for key in globals() if key.endswith("_cmd")]
+        commands = [key for key, value in globals().items() if isinstance(value, click.Command)]
         return commands
 
     def get_command(self, ctx, cmd_name):
-        return globals().get(cmd_name + "_cmd")
+        return globals().get(cmd_name)
