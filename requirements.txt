@@ -1,2 +1,2 @@
-tbs-sdk==0.0.6
+tbs-sdk==0.0.7
 click==6.7
