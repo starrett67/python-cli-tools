@@ -1,7 +1,7 @@
 import os
 import json
 import click
-import swagger_client
+import tbs_client
 from pathlib import Path
 from tbscli.decorators import instantiate_context, print_result
 
@@ -9,7 +9,7 @@ from tbscli.decorators import instantiate_context, print_result
 @click.command()
 @instantiate_context
 @print_result
-def login_cmd(ctx, *args, **kwargs):
+def login(ctx, *args, **kwargs):
     username = kwargs.get('username')
     password = kwargs.get('password')
     home_dir = os.getenv("HOME")
@@ -26,8 +26,8 @@ def login_cmd(ctx, *args, **kwargs):
         if not (username and password):
             username = click.prompt("Username", type=str)
             password = click.prompt("Password", type=str, hide_input=True)
-        auth_api = swagger_client.AuthApi()
-        jwt_data = swagger_client.JWTData(username=username,
+        auth_api = tbs_client.AuthApi()
+        jwt_data = tbs_client.JWTData(username=username,
                                           password=password)
         response = auth_api.auth_jwt_token_auth(jwt_data=jwt_data)
 
@@ -50,9 +50,10 @@ class AuthCLI(click.Group):
     def __init__(self, *args, **kwargs):
         kwargs['help'] = "Manage auth actions"
         super(AuthCLI, self).__init__(*args, **kwargs)
+
     def list_commands(self, ctx):
-        commands = [key.replace("_cmd", "") for key in globals() if key.endswith("_cmd")]
+        commands = [key for key, value in globals().items() if isinstance(value, click.Command)]
         return commands
 
     def get_command(self, ctx, cmd_name):
-        return globals().get(cmd_name + "_cmd")
+        return globals().get(cmd_name)
