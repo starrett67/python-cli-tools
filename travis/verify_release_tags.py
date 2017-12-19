@@ -43,7 +43,7 @@ def run(proposed_version: str=os.getenv("TBS_CLI_VERSION")):
                       type="commit",
                       tagger=tagger,
                       draft=True)
-        if os.getenv("TRAVIS_PULL_REQUEST"):
+        if os.getenv("TRAVIS_PULL_REQUEST") == "false":
             print(f"Would be creating a tag and release with the following values:\n{kwargs}")
         else:
             repo.create_git_tag_and_release(**kwargs)
