@@ -4,3 +4,5 @@ venv/
 testenv/
 __pycache__/
 tbs_cli.egg-info
+.coverage
+dist/

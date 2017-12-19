@@ -1,7 +1,8 @@
-from setuptools import setup, find_packages
+import os
+from setuptools import setup
 
 NAME = "tbs-cli"
-VERSION = "0.0.6"
+VERSION = os.getenv("TBS_CLI_VERSION")
 REQUIRES = ["click == 6.7", "tbs-sdk == 0.0.6"]
 
 setup(
