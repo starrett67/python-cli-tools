@@ -4,15 +4,16 @@ import click
 import tbs_client
 import inspect
 from pathlib import Path
-from tbscli.decorators import instantiate_context
+from tbscli.decorators import (instantiate_context,
+                               print_result)
 
 
 @click.command(help="Login to 3Blades")
 @click.option("--username")
 @click.option("--password")
 @instantiate_context
+@print_result
 def login(ctx, *args, **kwargs):
-    click.echo("In login command")
     home_dir = os.getenv("HOME")
     config_file = Path(home_dir, ".threeblades.config")
     if config_file.exists():
@@ -44,9 +45,9 @@ def login(ctx, *args, **kwargs):
             with open(config_file, "w") as tok_file:
                 tok_file.write(json.dumps(config))
 
-            click.echo(f"Welcome {username}.")
+            return f"Welcome, {username}!"
         else:
-            click.echo("Something went wrong with login :/")
+            return "Something went wrong with login :/"
 
 
 def istbscommand(obj):

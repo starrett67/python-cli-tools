@@ -1,0 +1,14 @@
+language: python
+cache:
+  - pip
+  - apt
+python:
+  - "3.6"
+branches:
+  only:
+    - master
+install:
+  - pip install coverage
+script:
+  - coverage run -m unittest
+  - covereage report -m
