@@ -1,15 +1,26 @@
 language: python
+
 cache:
   - pip
   - apt
+
 python:
   - "3.6"
+
 branches:
   only:
     - master
+
 install:
   - pip install -r requirements.txt
   - pip install coverage
+
 script:
   - coverage run -m unittest
   - coverage report -m
+
+after_success:
+  - bash travis/pypipush.sh
+
+notifications:
+  slack: 3blades:MSaGYZPPXj44OWqhhpO2ycWm
