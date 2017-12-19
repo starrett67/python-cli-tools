@@ -20,7 +20,11 @@ script:
   - coverage report -m
 
 after_success:
+  - pip install PyGithub
   - bash travis/pypipush.sh
 
 notifications:
   slack: 3blades:MSaGYZPPXj44OWqhhpO2ycWm
+
+env:
+  - TBS_CLI_ENV=0.0.7
