@@ -12,4 +12,4 @@ install:
   - pip install coverage
 script:
   - coverage run -m unittest
-  - covereage report -m
+  - coverage report -m
