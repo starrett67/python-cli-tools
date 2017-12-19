@@ -34,7 +34,7 @@ def run(proposed_version: str=os.getenv("TBS_CLI_VERSION")):
     else:
         tagger = github.InputGitAuthor(name="3Blades",
                                        email="auto-builds@3blades.io",
-                                       date=str(datetime.now()))
+                                       date=datetime.now().isoformat())
         kwargs = dict(tag=proposed_version,
                       tag_message=os.getenv("TRAVIS_COMMIT_MESSAGE"),
                       release_name=proposed_version,
@@ -43,7 +43,7 @@ def run(proposed_version: str=os.getenv("TBS_CLI_VERSION")):
                       type="commit",
                       tagger=tagger,
                       draft=True)
-        if os.getenv("TRAVIS_PULL_REQUEST"):
+        if os.getenv("TRAVIS_PULL_REQUEST") != "false":
             print(f"Would be creating a tag and release with the following values:\n{kwargs}")
         else:
             repo.create_git_tag_and_release(**kwargs)
