@@ -20,7 +20,6 @@ script:
   - coverage report -m
 
 after_success:
-  - pip install PyGithub
   - bash travis/post_success.sh
 
 notifications:
@@ -28,3 +27,4 @@ notifications:
 
 env:
   - TBS_CLI_VERSION=0.0.7
+  - TWINE_REPOSITORY=https://pypi.python.org/pypi
