@@ -21,8 +21,7 @@ def sort_tags(tag):
 
 
 def run(proposed_version: str=os.getenv("TBS_CLI_VERSION")):
-    gh = Github(os.getenv("GITHUB_USERNAME"),
-                os.getenv("GITHUB_PASSWORD"))
+    gh = Github(os.getenv("GITHUB_TOKEN"))
 
     repo = gh.get_organization("3blades").get_repo("python-cli-tools")
 
