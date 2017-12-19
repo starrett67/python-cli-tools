@@ -34,7 +34,7 @@ def run(proposed_version: str=os.getenv("TBS_CLI_VERSION")):
     else:
         tagger = github.InputGitAuthor(name="3Blades",
                                        email="auto-builds@3blades.io",
-                                       date=datetime.now())
+                                       date=str(datetime.now()))
         kwargs = dict(tag=proposed_version,
                       tag_message=os.getenv("TRAVIS_COMMIT_MESSAGE"),
                       release_name=proposed_version,
