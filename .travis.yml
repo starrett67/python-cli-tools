@@ -21,7 +21,6 @@ script:
 
 after_success:
   - export TBS_CLI_VERSION=0.0.7
-  - export TWINE_REPOSITORY_URL="https://pypi.python.org/pypi"
   - bash travis/post_success.sh
 
 notifications:
