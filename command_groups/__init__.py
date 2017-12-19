@@ -4,6 +4,49 @@ import click
 import tbs_client
 import inspect
 from pathlib import Path
+from tbscli.decorators import instantiate_context
+
+
+@click.command(help="Login to 3Blades")
+@click.option("--username")
+@click.option("--password")
+@instantiate_context
+def login(ctx, *args, **kwargs):
+    click.echo("In login command")
+    home_dir = os.getenv("HOME")
+    config_file = Path(home_dir, ".threeblades.config")
+    if config_file.exists():
+        click.echo(".threeblades.config file already exists in $HOME directory. "
+                   "Using that to login.")
+        with config_file.open() as conf:
+            line = conf.read()
+            conf_json = json.loads(line)
+            if "token" in conf_json and "namespace" in conf_json:
+                ctx.obj['token'] = conf_json['token']
+                ctx.obj['namespace'] = conf_json['namespace']
+            else:
+                click.echo("A .threeblades.config file exists, but is invalid. "
+                           "Please delete it and try logging in again.")
+    else:
+        username = kwargs.get("username") or click.prompt("Username", type=str)
+        password = kwargs.get("password") or click.prompt("Password", type=str, hide_input=True)
+        auth_api = tbs_client.AuthApi()
+        jwt_data = tbs_client.JWTData(username=username,
+                                      password=password)
+        response = auth_api.auth_jwt_token_auth(jwt_data=jwt_data)
+
+        if response.token:
+            config = {'token': response.token,
+                      'namespace': username}
+
+            ctx.obj['token'] = response.token
+            ctx.obj['namespace'] = username
+            with open(config_file, "w") as tok_file:
+                tok_file.write(json.dumps(config))
+
+            click.echo(f"Welcome {username}.")
+        else:
+            click.echo("Something went wrong with login :/")
 
 
 def istbscommand(obj):
@@ -27,7 +70,7 @@ class ThreeBladesBaseCommand(click.Command):
                 conf_json = json.loads(line)
                 self.context['token'] = conf_json['token']
                 self.context['namespace'] = conf_json.get('namespace')
-        tbs_client.configuration.api_key['Authorization'] = self.context['token']
+        tbs_client.configuration.api_key['Authorization'] = self.context.get('token')
         tbs_client.configuration.api_key_prefix['Authorization'] = 'Bearer'
         self.api_client = api_class()
 
