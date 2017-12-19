@@ -1,1 +1,1 @@
-python verify_release_tags.py
+python travis/verify_release_tags.py
