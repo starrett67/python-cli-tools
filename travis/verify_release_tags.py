@@ -32,9 +32,10 @@ def run(proposed_version: str=os.getenv("TBS_CLI_VERSION")):
     elif sorted(names_only + [proposed_version], key=semver_to_int, reverse=True)[0] != proposed_version:
         raise ValueError(f"Proposed version {proposed_version} would not be the highest version.")
     else:
+        release_time = datetime.now().isoformat(timespec="seconds") + "-00:00"
         tagger = github.InputGitAuthor(name="3Blades",
                                        email="auto-builds@3blades.io",
-                                       date=datetime.now().isoformat(timespec="seconds"))
+                                       date=release_time)
         kwargs = dict(tag=proposed_version,
                       tag_message=os.getenv("TRAVIS_COMMIT_MESSAGE"),
                       release_name=proposed_version,
