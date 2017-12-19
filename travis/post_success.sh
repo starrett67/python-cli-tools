@@ -1,1 +1,1 @@
-python verify_release_tags
+python verify_release_tags.py
