@@ -20,11 +20,9 @@ script:
   - coverage report -m
 
 after_success:
+  - export TBS_CLI_VERSION=0.0.7
+  - export TWINE_REPOSITORY="https://pypi.python.org/pypi"
   - bash travis/post_success.sh
 
 notifications:
   slack: 3blades:MSaGYZPPXj44OWqhhpO2ycWm
-
-env:
-  - TBS_CLI_VERSION=0.0.7
-  - TWINE_REPOSITORY=https://pypi.python.org/pypi
