@@ -27,4 +27,4 @@ notifications:
   slack: 3blades:MSaGYZPPXj44OWqhhpO2ycWm
 
 env:
-  - TBS_CLI_ENV=0.0.7
+  - TBS_CLI_VERSION=0.0.7
