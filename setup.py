@@ -3,7 +3,7 @@ from setuptools import setup
 
 NAME = "tbs-cli"
 VERSION = os.getenv("TBS_CLI_VERSION")
-REQUIRES = ["click == 6.7", "tbs-sdk == 0.0.6"]
+REQUIRES = ["click == 6.7", "tbs-sdk == 0.0.6", "colorama==0.3.9"]
 
 setup(
     name=NAME,
