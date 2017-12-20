@@ -1,8 +1,13 @@
+import os
 import click
 import pkgutil
 import command_groups
+import logging
+import logging.config
 from importlib import import_module
 from command_groups import login
+logging.config.fileConfig("logging.conf")
+tbslog = logging.getLogger('tbs')
 
 
 class ThreeBladesCLI(click.Group):
@@ -28,4 +33,11 @@ my_cli = ThreeBladesCLI(help="Command line tools for 3Blades")
 
 
 def main():
-    return my_cli()
+    try:
+        return my_cli()
+    except Exception as e:
+        click.echo("Uh oh, something went wrong:")
+        click.secho(str(e), fg="red", bold=True)
+        click.secho(f"To view the entire stacktrace for debugging, check the "
+                    f"logs at {os.getenv('HOME') + '/.threeblades.log'}", fg="yellow")
+        tbslog.exception(e)
