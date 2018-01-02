@@ -67,10 +67,23 @@ def delete(ctx, *args, **kwargs):
     response = project_api.projects_delete(namespace, project=project_name)
     return response
 
+@click.command()
+@click.option("--user")
+@click.option("--permissions")
+@instantiate_context
+@print_result
+def add_user(ctx, *args, **kwargs):
+    user = kwargs['user']
+    permissions = kwargs['permissions']
+    pass
+#     teams views from app-backend repo for add project collaborator
+# --user should be either username or email
+# --permissions should be [role]
+
 
 class ProjectsCLI(click.Group):
     def __init__(self, *args, **kwargs):
-        kwargs['help'] = "Manage account projects"
+        kwargs['help'] = "Manage projects in your account"
         super(ProjectsCLI, self).__init__(*args, **kwargs)
 
     def list_commands(self, ctx):

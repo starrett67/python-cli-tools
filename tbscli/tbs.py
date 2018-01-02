@@ -2,7 +2,6 @@ import os
 import click
 import pkgutil
 import command_groups
-import logging
 import logging.config
 from importlib import import_module
 from command_groups import login
