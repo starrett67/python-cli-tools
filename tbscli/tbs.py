@@ -5,6 +5,7 @@ import command_groups
 import logging.config
 from importlib import import_module
 from command_groups import login
+from tbscli.CONSTANTS import CLICK_CONTEXT_SETTINGS
 
 logging.config.fileConfig("logging.conf")
 tbslog = logging.getLogger('tbs')
@@ -29,7 +30,7 @@ class ThreeBladesCLI(click.Group):
             return login
 
 
-my_cli = ThreeBladesCLI(help="Command line tools for 3Blades")
+my_cli = ThreeBladesCLI(help="Command line tools for 3Blades", context_settings=CLICK_CONTEXT_SETTINGS)
 
 
 def main():

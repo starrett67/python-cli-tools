@@ -3,6 +3,7 @@ import click
 import tbs_client
 from command_groups import (ThreeBladesBaseCommand,
                             istbscommand)
+
 RUNTIME_ALIASES = {'python2.7': "04a08704-34a2-45c7-9a5e-1b42faed169a"}
 FRAMEWORK_ALIASES = {'tensorflow': "8fc02450-a3e9-4a98-9b66-173e489e6b55",
                      'tensorflow1.4': "8fc02450-a3e9-4a98-9b66-173e489e6b55"}

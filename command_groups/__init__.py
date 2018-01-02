@@ -6,11 +6,12 @@ import inspect
 from pathlib import Path
 from tbscli.decorators import (instantiate_context,
                                print_result)
+from tbscli.CONSTANTS import CLICK_CONTEXT_SETTINGS
 
 
-@click.command(help="Login to 3Blades")
-@click.option("--username")
-@click.option("--password")
+@click.command(help="Login to 3Blades", context_settings=CLICK_CONTEXT_SETTINGS)
+@click.option("--username", "-u", help="3Blades account username")
+@click.option("--password", "-p", help="3Blades account password")
 @instantiate_context
 @print_result
 def login(ctx, *args, **kwargs):

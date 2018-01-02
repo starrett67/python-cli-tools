@@ -1,11 +1,12 @@
 import tbs_client
 import click
 from tbscli.decorators import instantiate_context, print_result
+from tbscli.CONSTANTS import CLICK_CONTEXT_SETTINGS
 
 
 # TODO: Consider combining all these decorators into one. Would be a lot less verbose
-@click.command(help="Get details about a file in a project")
-@click.option("--namespace", help="Namespace hosting target project")
+@click.command(help="Get details about a file in a project", context_settings=CLICK_CONTEXT_SETTINGS)
+@click.option("--namespace", "-n", help="Namespace hosting target project")
 @instantiate_context
 @print_result
 def detail(ctx, *args, **kwargs):
@@ -18,8 +19,8 @@ def detail(ctx, *args, **kwargs):
     return response
 
 
-@click.command(help="List all files in a project")
-@click.option("--namespace", help="Namespace hosting target project")
+@click.command(help="List all files in a project", context_settings=CLICK_CONTEXT_SETTINGS)
+@click.option("--namespace", "-n", help="Namespace hosting target project")
 @instantiate_context
 @print_result
 def list(ctx, *args, **kwargs):
@@ -31,8 +32,8 @@ def list(ctx, *args, **kwargs):
     return response
 
 
-@click.command(help="Create a project")
-@click.option("--namespace", help="Namespace hosting target project")
+@click.command(help="Create a project", context_settings=CLICK_CONTEXT_SETTINGS)
+@click.option("--namespace", "-n", help="Namespace hosting target project")
 @instantiate_context
 @print_result
 def create(ctx, *args, **kwargs):
@@ -53,8 +54,8 @@ def create(ctx, *args, **kwargs):
     return response
 
 
-@click.command(help="Delete a project")
-@click.option("--namespace", help="Namespace hosting target project")
+@click.command(help="Delete a project", context_settings=CLICK_CONTEXT_SETTINGS)
+@click.option("--namespace", "-n", help="Namespace hosting target project")
 @instantiate_context
 @print_result
 def delete(ctx, *args, **kwargs):
@@ -67,10 +68,25 @@ def delete(ctx, *args, **kwargs):
     response = project_api.projects_delete(namespace, project=project_name)
     return response
 
+@click.command(help="Update a project", context_settings=CLICK_CONTEXT_SETTINGS)
+@click.option("--namespace", "-n", help="Namespace hosting target project")
+@instantiate_context
+@print_result
+def update(ctx, *args, **kwargs):
+    namespace = kwargs['namespace']
+    # tbs_client.configuration.api_key['Authorization'] = ctx.obj['token']
+    # tbs_client.configuration.api_key_prefix['Authorization'] = 'Bearer'
+    # project_api = tbs_client.ProjectsApi()
+    # project_name = click.prompt("Name of project to delete", type=str)
+    # click.confirm(f"Are you SURE you want to delete the project {project_name}", abort=True)
+    # response = project_api.projects_delete(namespace, project=project_name)
+    # return response
+    click.echo(namespace)
 
-@click.command(help="Add a user as project collaborator")
-@click.option("--user", help="Username or email of user to add")
-@click.option("--permissions", help="Designated permissions level/role for added user")
+
+@click.command(help="Add a user as project collaborator", context_settings=CLICK_CONTEXT_SETTINGS)
+@click.option("--user", "-u", help="Username or email of user to add")
+@click.option("--permissions", "-p", help="Designated permissions level/role for added user")
 @instantiate_context
 @print_result
 def adduser(ctx, *args, **kwargs):
@@ -81,6 +97,14 @@ def adduser(ctx, *args, **kwargs):
 # --user should be either username or email
 # --permissions should be [role]
 
+
+@click.command(help="Remove a user as project collaborator", context_settings=CLICK_CONTEXT_SETTINGS)
+@click.option("--user", "-u", help="Username or email of user to remove")
+@instantiate_context
+@print_result
+def rmuser(ctx, *args, **kwargs):
+    user = kwargs['user']
+    click.echo(user)
 
 class ProjectsCLI(click.Group):
     def __init__(self, *args, **kwargs):
