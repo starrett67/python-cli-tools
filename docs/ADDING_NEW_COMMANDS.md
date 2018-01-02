@@ -1,4 +1,6 @@
 # Adding New Commands
+Note: To develop and test changes locally, you may need to use `pip install --editable` to install a local, editable project version.
+
 ## Top Level Commands
 To add a new top level command, create a `.py` file in the `command_groups` package. The module name should be the name 
 you would like the command to have. For example, if I want to add a command called `servers`, I would create a file at 
