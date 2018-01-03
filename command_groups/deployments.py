@@ -4,43 +4,6 @@ import tbs_client
 from command_groups import (ThreeBladesBaseCommand, istbscommand)
 from tbscli.CONSTANTS import (RUNTIME_ALIASES, FRAMEWORK_ALIASES)
 
-
-class DeploymentsDetailsCommand(ThreeBladesBaseCommand):
-    def __init__(self):
-        options = [
-            click.Option(
-                param_decls=["--namespace", "-n"],
-                help="Name of namespace",
-                type=str,
-                prompt=True
-            ),
-            click.Option(
-                param_decls=["--project", "-p"],
-                help="Name of project",
-                type=str,
-                prompt=True
-            ),
-            click.Option(
-                param_decls=["--deployment", "-d"],
-                help="Name of deployment",
-                type=str,
-                prompt=True
-            )
-        ]
-        self.context = {}
-        super(DeploymentsDetailsCommand, self).__init__(name="details",
-                                                        params=options,
-                                                        help="Get details for a deployment",
-                                                        api_class=tbs_client.DeploymentsApi)
-
-    def _validate_params(self, *args, **kwargs):
-        return args, kwargs
-
-    def _cmd(self, *args, **kwargs):
-        response = self.api_client.deployments_read(**kwargs)
-        print(response)
-
-
 class DeploymentsCreateCommand(ThreeBladesBaseCommand):
     def __init__(self):
         options = [
@@ -90,7 +53,7 @@ class DeploymentsCreateCommand(ThreeBladesBaseCommand):
         self.context = {}
         super(DeploymentsCreateCommand, self).__init__(name="create",
                                                        params=options,
-                                                       help="Create and deploy a model as a RESTful endpoint",
+                                                       help="Create and deploy a model",
                                                        api_class=tbs_client.DeploymentsApi)
 
     def _validate_params(self, *args, **kwargs):
@@ -144,7 +107,7 @@ class DeploymentsDeleteCommand(ThreeBladesBaseCommand):
         self.context = {}
         super(DeploymentsDeleteCommand, self).__init__(name="delete",
                                                        params=options,
-                                                       help="Delete a given deployment",
+                                                       help="Delete a deployment",
                                                        api_class=tbs_client.DeploymentsApi)
 
     def _validate_params(self, *args, **kwargs):
@@ -156,6 +119,42 @@ class DeploymentsDeleteCommand(ThreeBladesBaseCommand):
             print(f"Deployment {kwargs['deployment']} deleted successfully.")
         else:
             print(response)
+
+
+class DeploymentsDetailsCommand(ThreeBladesBaseCommand):
+    def __init__(self):
+        options = [
+            click.Option(
+                param_decls=["--namespace", "-n"],
+                help="Name of namespace",
+                type=str,
+                prompt=True
+            ),
+            click.Option(
+                param_decls=["--project", "-p"],
+                help="Name of project",
+                type=str,
+                prompt=True
+            ),
+            click.Option(
+                param_decls=["--deployment", "-d"],
+                help="Name of deployment",
+                type=str,
+                prompt=True
+            )
+        ]
+        self.context = {}
+        super(DeploymentsDetailsCommand, self).__init__(name="details",
+                                                        params=options,
+                                                        help="Get details for a deployment",
+                                                        api_class=tbs_client.DeploymentsApi)
+
+    def _validate_params(self, *args, **kwargs):
+        return args, kwargs
+
+    def _cmd(self, *args, **kwargs):
+        response = self.api_client.deployments_read(**kwargs)
+        print(response)
 
 
 class DeploymentsListCommand(ThreeBladesBaseCommand):
@@ -177,7 +176,7 @@ class DeploymentsListCommand(ThreeBladesBaseCommand):
         self.context = {}
         super(DeploymentsListCommand, self).__init__(name="list",
                                                      params=options,
-                                                     help="List all deployments for a given project",
+                                                     help="List all deployments for a project",
                                                      api_class=tbs_client.DeploymentsApi)
 
     def _validate_params(self, *args, **kwargs):
@@ -214,7 +213,7 @@ class DeploymentsUpdateCommand(ThreeBladesBaseCommand):
         self.deployment = None
         super(DeploymentsUpdateCommand, self).__init__(name="update",
                                                        params=options,
-                                                       help="Update a given deployment",
+                                                       help="Update a deployment",
                                                        api_class=tbs_client.DeploymentsApi)
 
     def _validate_params(self, *args, **kwargs):
