@@ -1,43 +1,39 @@
 import time
 import click
 import tbs_client
-from command_groups import (ThreeBladesBaseCommand,
-                            istbscommand)
-
-RUNTIME_ALIASES = {'python2.7': "04a08704-34a2-45c7-9a5e-1b42faed169a"}
-FRAMEWORK_ALIASES = {'tensorflow': "8fc02450-a3e9-4a98-9b66-173e489e6b55",
-                     'tensorflow1.4': "8fc02450-a3e9-4a98-9b66-173e489e6b55"}
+from command_groups import (ThreeBladesBaseCommand, istbscommand)
+from tbscli.CONSTANTS import (RUNTIME_ALIASES, FRAMEWORK_ALIASES)
 
 
 class DeploymentsDetailsCommand(ThreeBladesBaseCommand):
     def __init__(self):
-        options = [click.Option(param_decls=["--namespace"]),
-                   click.Option(param_decls=["--project"]),
-                   click.Option(param_decls=["--deployment"])]
+        options = [
+            click.Option(
+                param_decls=["--namespace", "-n"],
+                help="Name of namespace",
+                type=str,
+                prompt=True
+            ),
+            click.Option(
+                param_decls=["--project", "-p"],
+                help="Name of project",
+                type=str,
+                prompt=True
+            ),
+            click.Option(
+                param_decls=["--deployment", "-d"],
+                help="Name of deployment",
+                type=str,
+                prompt=True
+            )
+        ]
         self.context = {}
         super(DeploymentsDetailsCommand, self).__init__(name="details",
                                                         params=options,
-                                                        help="Get details for a given deployment",
+                                                        help="Get details for a deployment",
                                                         api_class=tbs_client.DeploymentsApi)
 
     def _validate_params(self, *args, **kwargs):
-        # This _could_ be refactored to the parent class, but I think that might be
-        # a bit too magical and would probably get it wrong sometimes
-        namespace = kwargs.get('namespace') or self.context.get('namespace')
-        if namespace is None:
-            namespace = click.prompt("Namespace", type=str)
-        kwargs['namespace'] = namespace
-
-        project_name = kwargs.get("project")
-        if project_name is None:
-            project_name = click.prompt("Project", type=str)
-        kwargs['project'] = project_name
-
-        deployment_identifier = kwargs.get('deployment')
-        if deployment_identifier is None:
-            deployment_identifier = click.prompt("Deployment", type=str)
-        kwargs['deployment'] = deployment_identifier
-
         return args, kwargs
 
     def _cmd(self, *args, **kwargs):
@@ -47,13 +43,50 @@ class DeploymentsDetailsCommand(ThreeBladesBaseCommand):
 
 class DeploymentsCreateCommand(ThreeBladesBaseCommand):
     def __init__(self):
-        options = [click.Option(param_decls=["--namespace"]),
-                   click.Option(param_decls=["--project"]),
-                   click.Option(param_decls=["--name"]),
-                   click.Option(param_decls=["--handler"]),
-                   click.Option(param_decls=["--files"]),
-                   click.Option(param_decls=["--runtime"]),
-                   click.Option(param_decls=["--framework"])]
+        options = [
+            click.Option(
+                param_decls=["--namespace", "-n"],
+                help="Name of namespace",
+                type=str,
+                prompt=True
+            ),
+            click.Option(
+                param_decls=["--project", "-p"],
+                help="Name of project",
+                type=str,
+                prompt=True
+            ),
+            click.Option(
+                param_decls=["--name", "-n"],
+                help="Name of deployment to create",
+                type=str,
+                prompt=True
+            ),
+            click.Option(
+                param_decls=["--handler", "-hf"],
+                help="Name of handler function",
+                type=str,
+                prompt=True
+            ),
+            click.Option(
+                param_decls=["--files", "-f"],
+                help="Files to include",
+                type=str,
+                prompt=True
+            ),
+            click.Option(
+                param_decls=["--runtime", "-r"],
+                help="Deployment runtime",
+                type=click.Choice(RUNTIME_ALIASES),
+                prompt=True
+            ),
+            click.Option(
+                param_decls=["--framework", "-f"],
+                help="Deployment framework",
+                type=click.Choice(FRAMEWORK_ALIASES),
+                prompt=True
+            )
+        ]
         self.context = {}
         super(DeploymentsCreateCommand, self).__init__(name="create",
                                                        params=options,
@@ -61,41 +94,6 @@ class DeploymentsCreateCommand(ThreeBladesBaseCommand):
                                                        api_class=tbs_client.DeploymentsApi)
 
     def _validate_params(self, *args, **kwargs):
-        namespace = kwargs.get('namespace') or self.context.get('namespace')
-        if namespace is None:
-            namespace = click.prompt("Namespace", type=str)
-        kwargs['namespace'] = namespace
-
-        project_name = kwargs.get("project")
-        if project_name is None:
-            project_name = click.prompt("Project", type=str)
-        kwargs['project'] = project_name
-
-        name = kwargs.get("name")
-        if name is None:
-            name = click.prompt("Name", type=str)
-        kwargs['name'] = name
-
-        handler = kwargs.get('handler')
-        if handler is None:
-            handler = click.prompt("Handler Function", type=str)
-        kwargs['handler'] = handler
-
-        files = kwargs.get('files')
-        if files is None:
-            files = click.prompt("Files", type=str)
-        kwargs['files'] = files
-
-        runtime = kwargs.get('runtime')
-        if runtime is None:
-            runtime = click.prompt("Runtime", type=str)
-        kwargs['runtime'] = RUNTIME_ALIASES[runtime]
-
-        framework = kwargs.get('framework')
-        if framework is None:
-            framework = click.prompt("Framework", type=str)
-        kwargs['framework'] = FRAMEWORK_ALIASES[framework]
-
         return args, kwargs
 
     def _cmd(self, *args, **kwargs):
@@ -123,9 +121,26 @@ class DeploymentsCreateCommand(ThreeBladesBaseCommand):
 
 class DeploymentsDeleteCommand(ThreeBladesBaseCommand):
     def __init__(self):
-        options = [click.Option(param_decls=["--namespace"]),
-                   click.Option(param_decls=["--project"]),
-                   click.Option(param_decls=["--deployment"])]
+        options = [
+            click.Option(
+                param_decls=["--namespace", "-n"],
+                help="Name of namespace",
+                type=str,
+                prompt=True
+            ),
+            click.Option(
+                param_decls=["--project", "-p"],
+                help="Name of project",
+                type=str,
+                prompt=True
+            ),
+            click.Option(
+                param_decls=["--deployment", "-d"],
+                help="Name of deployment to delete",
+                type=str,
+                prompt=True
+            )
+        ]
         self.context = {}
         super(DeploymentsDeleteCommand, self).__init__(name="delete",
                                                        params=options,
@@ -133,21 +148,6 @@ class DeploymentsDeleteCommand(ThreeBladesBaseCommand):
                                                        api_class=tbs_client.DeploymentsApi)
 
     def _validate_params(self, *args, **kwargs):
-        namespace = kwargs.get('namespace') or self.context.get('namespace')
-        if namespace is None:
-            namespace = click.prompt("Namespace", type=str)
-        kwargs['namespace'] = namespace
-
-        project_name = kwargs.get("project")
-        if project_name is None:
-            project_name = click.prompt("Project", type=str)
-        kwargs['project'] = project_name
-
-        deployment_identifier = kwargs.get('deployment')
-        if deployment_identifier is None:
-            deployment_identifier = click.prompt("Deployment to delete", type=str)
-        kwargs['deployment'] = deployment_identifier
-
         return args, kwargs
 
     def _cmd(self, *args, **kwargs):
@@ -160,8 +160,20 @@ class DeploymentsDeleteCommand(ThreeBladesBaseCommand):
 
 class DeploymentsListCommand(ThreeBladesBaseCommand):
     def __init__(self):
-        options = [click.Option(param_decls=["--namespace"]),
-                   click.Option(param_decls=["--project"])]
+        options = [
+            click.Option(
+                param_decls=["--namespace", "-n"],
+                help="Name of namespace",
+                type=str,
+                prompt=True
+            ),
+            click.Option(
+                param_decls=["--project", "-p"],
+                help="Name of project",
+                type=str,
+                prompt=True
+            )
+        ]
         self.context = {}
         super(DeploymentsListCommand, self).__init__(name="list",
                                                      params=options,

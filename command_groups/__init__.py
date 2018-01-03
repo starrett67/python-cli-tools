@@ -46,7 +46,7 @@ def login(ctx, *args, **kwargs):
             with open(config_file, "w") as tok_file:
                 tok_file.write(json.dumps(config))
 
-            return f"Welcome, {username}!"
+            return f"User '{username}' successfully logged in."
         else:
             return "Something went wrong with login :/"
 
@@ -62,6 +62,7 @@ class ThreeBladesBaseCommand(click.Command):
         super(ThreeBladesBaseCommand, self).__init__(name=name,
                                                      params=params,
                                                      help=help,
+                                                     context_settings=CLICK_CONTEXT_SETTINGS,
                                                      callback=self._full_command)
         self.context = {}
         home_dir = os.getenv("HOME")
