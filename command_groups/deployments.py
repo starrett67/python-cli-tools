@@ -20,7 +20,7 @@ class DeploymentsCreateCommand(ThreeBladesBaseCommand):
                 prompt=True
             ),
             click.Option(
-                param_decls=["--name", "-n"],
+                param_decls=["--name", "-na"],
                 help="Name of deployment to create",
                 type=str,
                 prompt=True
@@ -32,7 +32,7 @@ class DeploymentsCreateCommand(ThreeBladesBaseCommand):
                 prompt=True
             ),
             click.Option(
-                param_decls=["--files", "-f"],
+                param_decls=["--files", "-fi"],
                 help="Files to include",
                 type=str,
                 prompt=True
@@ -69,6 +69,7 @@ class DeploymentsCreateCommand(ThreeBladesBaseCommand):
                            'runtime': kwargs.get('runtime'),
                            'framework': kwargs.get('framework')}
         deploy_data = tbs_client.DeploymentData(**deployment_data)
+
         initial_response = self.api_client.deployments_create(namespace=kwargs.get('namespace'),
                                                               project=kwargs.get('project'),
                                                               deployment_data=deploy_data)
@@ -121,10 +122,10 @@ class DeploymentsDeleteCommand(ThreeBladesBaseCommand):
 
     def _cmd(self, *args, **kwargs):
         deployment = kwargs['deployment']
-        if click.confirm(text=f"Proceed with deleting deployment '{deployment}'", abort=True):
+        if click.confirm(text=f"Proceed with deleting deployment {deployment}", abort=True):
             response = self.api_client.deployments_delete(**kwargs)
             if response is None:
-                print(f"Deployment '{deployment}' deleted successfully.")
+                print(f"Deployment {deployment} deleted successfully.")
             else:
                 print(response)
 
@@ -217,15 +218,15 @@ class DeploymentsUpdateCommand(ThreeBladesBaseCommand):
                 prompt=True
             ),
             click.Option(
-                param_decls=["--name", "-nm"],
-                help=""
+                param_decls=["--name", "-na"],
+                help="New name of namespace, if needed"
             ),
             click.Option(
-                param_decls=["--handler", "-h"],
+                param_decls=["--handler", "-ha"],
                 help="Handler function"
             ),
             click.Option(
-                param_decls=["--files", "-f"],
+                param_decls=["--files", "-fi"],
                 help="Files to include"
             ),
             click.Option(
@@ -235,7 +236,8 @@ class DeploymentsUpdateCommand(ThreeBladesBaseCommand):
             ),
             click.Option(
                 param_decls=["--framework", "-f"],
-                help="Deployment framework"
+                help="Deployment framework",
+                type=click.Choice(FRAMEWORK_ALIASES)
             )
         ]
         self.context = {}
@@ -246,21 +248,6 @@ class DeploymentsUpdateCommand(ThreeBladesBaseCommand):
                                                        api_class=tbs_client.DeploymentsApi)
 
     def _validate_params(self, *args, **kwargs):
-        namespace = kwargs.get('namespace') or self.context.get('namespace')
-        if namespace is None:
-            namespace = click.prompt("Namespace", type=str)
-        kwargs['namespace'] = namespace
-
-        project_name = kwargs.get("project")
-        if project_name is None:
-            project_name = click.prompt("Project", type=str)
-        kwargs['project'] = project_name
-
-        deployment_identifier = kwargs.get('deployment')
-        if deployment_identifier is None:
-            deployment_identifier = click.prompt("Deployment to update", type=str)
-        kwargs['deployment'] = deployment_identifier
-
         self.deployment = self.api_client.deployments_read(namespace=kwargs['namespace'],
                                                            project=kwargs['project'],
                                                            deployment=kwargs['deployment'])
@@ -296,22 +283,22 @@ class DeploymentsUpdateCommand(ThreeBladesBaseCommand):
         runtime = kwargs.get('runtime')
         if runtime is None:
             runtime = click.prompt("Runtime",
-                                   type=str,
+                                   type=click.Choice(RUNTIME_ALIASES),
                                    default=self.deployment.runtime)
 
         framework = kwargs.get('framework')
         if framework is None:
             framework = click.prompt("Framework",
-                                     type=str,
+                                     type=click.Choice(FRAMEWORK_ALIASES),
                                      default=self.deployment.framework)
 
         config = tbs_client.DeploymentConfig(handler=handler,
                                              files=files)
 
         deployment_data = tbs_client.DeploymentData(name=name,
-                                                    runtime=RUNTIME_ALIASES.get(runtime) or runtime,
-                                                    framework=FRAMEWORK_ALIASES.get(framework) or framework,
-                                                    config=config)
+                                                    config=config,
+                                                    runtime=RUNTIME_ALIASES[runtime],
+                                                    framework=FRAMEWORK_ALIASES[framework])
 
         response = self.api_client.deployments_update(namespace=kwargs['namespace'],
                                                       project=kwargs['project'],
