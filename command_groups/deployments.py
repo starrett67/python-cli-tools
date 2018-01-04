@@ -20,19 +20,19 @@ class DeploymentsCreateCommand(ThreeBladesBaseCommand):
                 prompt=True
             ),
             click.Option(
-                param_decls=["--name", "-na"],
+                param_decls=["--name", "-o"],
                 help="Name of deployment to create",
                 type=str,
                 prompt=True
             ),
             click.Option(
-                param_decls=["--handler", "-ha"],
+                param_decls=["--handler", "-i"],
                 help="Handler function",
                 type=str,
                 prompt=True
             ),
             click.Option(
-                param_decls=["--files", "-fi"],
+                param_decls=["--files", "-g"],
                 help="Files to include",
                 type=str,
                 prompt=True
@@ -218,15 +218,15 @@ class DeploymentsUpdateCommand(ThreeBladesBaseCommand):
                 prompt=True
             ),
             click.Option(
-                param_decls=["--name", "-na"],
+                param_decls=["--name", "-o"],
                 help="New name of namespace, if needed"
             ),
             click.Option(
-                param_decls=["--handler", "-ha"],
+                param_decls=["--handler", "-i"],
                 help="Handler function"
             ),
             click.Option(
-                param_decls=["--files", "-fi"],
+                param_decls=["--files", "-g"],
                 help="Files to include"
             ),
             click.Option(
