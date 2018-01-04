@@ -1,7 +1,6 @@
 # Adding New Commands
-Note: To develop and test changes locally, you may need to use `pip install --editable` to install a local, editable project version.
 
-## Top Level Commands
+### Top Level Commands
 To add a new top level command, create a `.py` file in the `command_groups` package. The module name should be the name 
 you would like the command to have. For example, if I want to add a command called `servers`, I would create a file at 
 `command_groups/servers.py`
@@ -33,20 +32,22 @@ class ServersCLI(click.Group):
 
 Unfortunately, this class must be fully defined like this for each top level command instead of sub classing some parent command. 
 This is due to the way python imports and `globals` works. This implementation may be changed in order to support inheritance
- at some point in the future. Note that this class definition **must** be at the **bottom** of the module. Again, this is due
- to the way `globals()` works in python.
+ at some point in the future. **Note:** this class definition **must** be at the **bottom** of the module.
  
- ## Sub Commands
+ ### Sub Commands
  Sub Commands are defined by subclassing `ThreeBladesBaseCommand` (this, among other things, is what `istbscommand` checks for).
  There are no requirements on how these command classes must be named, but so far I've followed the convention `ModuleSubcommandCommand`.
  Your sub command class should define three methods:
  - `__init__`
- - `validate_params`
+ - `_validate_params`
  - `_cmd`
  
- ### `__init__(self)`
- The `__init__` method is used to a.) define options/flags for the sub command, b.) the name of the sub command,
- c.) help information for the sub command, and d.) which API class from the SDK to use in order to communicate with the API.
+ #### `__init__(self)`
+ The `__init__` method defines:
+ a.) options/flags for the sub command,
+ b.) the name of the sub command,
+ c.) help information for the sub command,
+ d.) which SDK API class to use in order to communicate with the API.
  
  ##### Example:
  ```python
@@ -68,17 +69,17 @@ class ServersDetailsCommand(ThreeBladesBaseCommand):
  This, combined with the `ServersCLI` class from above allows the following from the command line: `tbs servers read`.
  
  
- ### _validate_params(self, *args, **kwargs) -> tuple
- Strictly speaking, it is not _required_ that `_validate_params` be implemented, but it is rare that you wouldn't need to.
+ #### _validate_params(self, *args, **kwargs) -> tuple
+ Strictly speaking, it is not _required_ that `_validate_params()` be implemented, but it is rare that you wouldn't need to.
  `args` and `kwargs` come from whatever was passed to `params` at runtime. `args` corresponds to any required positional arguments
- for the subcommand (instances of `click.Argument`); `kwargs` are any optional flags (instances of `click.Option`) sudh as `--namespace`
+ for the subcommand (instances of `click.Argument()`); `kwargs` are any optional flags (instances of `click.Option()`) such as `--namespace`
  from our example. The purpose of this method is to check if the argument/option was provided by the user, make sure the value is 
  coherent, and perhaps prompt the user for input if need be. It must return a tuple containing the validated `args` and `kwargs`.
  
 `tbs servers details --namespace foo --project bar` would result in `_validate_params` being called with `args=[]` and 
 `kwargs = {'namespace': "foo", 'project': "Bar"}`.
 
-#### Example
+##### Example
 ```python
 def _validate_params(self, *args, **kwargs):
     namespace = kwargs.get('namespace') or self.context.get('namespace')
@@ -95,10 +96,10 @@ def _validate_params(self, *args, **kwargs):
 
 This example simply checks to see if a value was provided via a flag, and if not prompts the user to input the value.
 
-### _cmd(self, *args, **kwargs)
+#### _cmd(self, *args, **kwargs)
 This is the business logic of your command, and is typically pretty simple.
 
-#### Example
+##### Example
 ```python
 def _cmd(self, *args, **kwargs):
     # This example is going to assume that you've
@@ -112,4 +113,5 @@ def _cmd(self, *args, **kwargs):
 
 ## General Notes
 
+- To develop and test changes locally, you may need to use `pip install --editable` to install a local, editable project version.
 - It's generally preferable to use `click.echo` instead of `print`
