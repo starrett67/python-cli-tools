@@ -2,7 +2,7 @@ import click
 import tbs_client
 from command_groups import (ThreeBladesBaseCommand, istbscommand)
 from tbscli.decorators import instantiate_context, print_result
-from tbscli.CONSTANTS import CLICK_CONTEXT_SETTINGS, PERMISSIONS_CHOICES_DISPLAYED
+from tbscli.CONSTANTS import CLICK_CONTEXT_SETTINGS, PERMISSIONS_ALIASES
 
 
 # # TODO: Consider combining all these decorators into one. Would be a lot less verbose
@@ -78,7 +78,7 @@ class ProjectsAddUserCommand(ThreeBladesBaseCommand):
                          prompt=True),
             click.Option(param_decls=["--permissions", "-p"],
                          help="Appropriate permissions level",
-                         type=click.Choice(PERMISSIONS_CHOICES_DISPLAYED),
+                         type=click.Choice(PERMISSIONS_ALIASES),
                          prompt=True)
         ]
         self.context = {}
@@ -88,12 +88,15 @@ class ProjectsAddUserCommand(ThreeBladesBaseCommand):
                                                      api_class=tbs_client.ProjectsApi)
 
     def _validate_params(self, *args, **kwargs):
+        kwargs['permissions'] = PERMISSIONS_ALIASES[kwargs.get('permissions')]
         return args, kwargs
 
     def _cmd(self, *args, **kwargs):
-        # response = self.api_client.projects
-        # print(response)
-        click.echo(message=kwargs)
+        if click.confirm(text=f"Proceed adding user {kwargs['user']}?", abort=True):
+            # response = self.api_client.projects
+            # print(response)
+            click.echo(message=kwargs)
+            click.echo(kwargs['permissions'])
 
 # @click.command(help="Update a project", context_settings=CLICK_CONTEXT_SETTINGS)
 # @click.option("--namespace", "-n", help="Namespace hosting target project")

@@ -122,7 +122,7 @@ class DeploymentsDeleteCommand(ThreeBladesBaseCommand):
 
     def _cmd(self, *args, **kwargs):
         deployment = kwargs['deployment']
-        if click.confirm(text=f"Proceed with deleting deployment {deployment}", abort=True):
+        if click.confirm(text=f"Proceed deleting deployment {deployment}?", abort=True):
             response = self.api_client.deployments_delete(**kwargs)
             if response is None:
                 print(f"Deployment {deployment} deleted successfully.")
