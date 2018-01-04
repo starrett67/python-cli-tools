@@ -26,8 +26,8 @@ class DeploymentsCreateCommand(ThreeBladesBaseCommand):
                 prompt=True
             ),
             click.Option(
-                param_decls=["--handler", "-hf"],
-                help="Name of handler function",
+                param_decls=["--handler", "-ha"],
+                help="Handler function",
                 type=str,
                 prompt=True
             ),
@@ -57,6 +57,8 @@ class DeploymentsCreateCommand(ThreeBladesBaseCommand):
                                                        api_class=tbs_client.DeploymentsApi)
 
     def _validate_params(self, *args, **kwargs):
+        kwargs['runtime'] = RUNTIME_ALIASES[kwargs.get('runtime')]
+        kwargs['framework'] = FRAMEWORK_ALIASES[kwargs.get('framework')]
         return args, kwargs
 
     def _cmd(self, *args, **kwargs):
@@ -73,9 +75,13 @@ class DeploymentsCreateCommand(ThreeBladesBaseCommand):
         response = self.api_client.deployments_deploy(namespace=kwargs.get('namespace'),
                                                       project=kwargs.get('project'),
                                                       deployment=initial_response.name)
-        click.echo("Deploying...")
-        # TODO: Add a status bar here
-        time.sleep(10)
+
+        # TODO: Here's a hacked-together skeleton of a status bar. Fix this asap.
+        with click.progressbar(length=10, label="Creating and deploying") as bar:
+            for i in range(9):
+                bar.update(i/2)
+                time.sleep(1)
+
         final_response = self.api_client.deployments_read(project=kwargs.get('project'),
                                                           namespace=kwargs.get('namespace'),
                                                           deployment=initial_response.name)
@@ -89,7 +95,7 @@ class DeploymentsDeleteCommand(ThreeBladesBaseCommand):
                 param_decls=["--namespace", "-n"],
                 help="Name of namespace",
                 type=str,
-                prompt=True
+                prompt=True,
             ),
             click.Option(
                 param_decls=["--project", "-p"],
@@ -99,7 +105,7 @@ class DeploymentsDeleteCommand(ThreeBladesBaseCommand):
             ),
             click.Option(
                 param_decls=["--deployment", "-d"],
-                help="Name of deployment to delete",
+                help="Name of deployment",
                 type=str,
                 prompt=True
             )
@@ -114,11 +120,13 @@ class DeploymentsDeleteCommand(ThreeBladesBaseCommand):
         return args, kwargs
 
     def _cmd(self, *args, **kwargs):
-        response = self.api_client.deployments_delete(**kwargs)
-        if response is None:
-            print(f"Deployment {kwargs['deployment']} deleted successfully.")
-        else:
-            print(response)
+        deployment = kwargs['deployment']
+        if click.confirm(text=f"Proceed with deleting deployment '{deployment}'", abort=True):
+            response = self.api_client.deployments_delete(**kwargs)
+            if response is None:
+                print(f"Deployment '{deployment}' deleted successfully.")
+            else:
+                print(response)
 
 
 class DeploymentsDetailsCommand(ThreeBladesBaseCommand):
@@ -180,18 +188,6 @@ class DeploymentsListCommand(ThreeBladesBaseCommand):
                                                      api_class=tbs_client.DeploymentsApi)
 
     def _validate_params(self, *args, **kwargs):
-        # This _could_ be refactored to the parent class, but I think that might be
-        # a bit too magical and would probably get it wrong sometimes
-        namespace = kwargs.get('namespace') or self.context.get('namespace')
-        if namespace is None:
-            namespace = click.prompt("Namespace", type=str)
-        kwargs['namespace'] = namespace
-
-        project_name = kwargs.get("project")
-        if project_name is None:
-            project_name = click.prompt("Project", type=str)
-        kwargs['project'] = project_name
-
         return args, kwargs
 
     def _cmd(self, *args, **kwargs):
@@ -201,14 +197,47 @@ class DeploymentsListCommand(ThreeBladesBaseCommand):
 
 class DeploymentsUpdateCommand(ThreeBladesBaseCommand):
     def __init__(self):
-        options = [click.Option(param_decls=["--namespace"]),
-                   click.Option(param_decls=["--project"]),
-                   click.Option(param_decls=["--deployment"]),
-                   click.Option(param_decls=["--name"]),
-                   click.Option(param_decls=["--handler"]),
-                   click.Option(param_decls=["--files"]),
-                   click.Option(param_decls=["--runtime"]),
-                   click.Option(param_decls=["--framework"])]
+        options = [
+            click.Option(
+                param_decls=["--namespace", "-n"],
+                help="Name of namespace",
+                type=str,
+                prompt=True
+            ),
+            click.Option(
+                param_decls=["--project", "-p"],
+                help="Name of project",
+                type=str,
+                prompt=True
+            ),
+            click.Option(
+                param_decls=["--deployment", "-d"],
+                help="Name of deployment",
+                type=str,
+                prompt=True
+            ),
+            click.Option(
+                param_decls=["--name", "-nm"],
+                help=""
+            ),
+            click.Option(
+                param_decls=["--handler", "-h"],
+                help="Handler function"
+            ),
+            click.Option(
+                param_decls=["--files", "-f"],
+                help="Files to include"
+            ),
+            click.Option(
+                param_decls=["--runtime", "-r"],
+                help="Deployment runtime",
+                type=click.Choice(RUNTIME_ALIASES)
+            ),
+            click.Option(
+                param_decls=["--framework", "-f"],
+                help="Deployment framework"
+            )
+        ]
         self.context = {}
         self.deployment = None
         super(DeploymentsUpdateCommand, self).__init__(name="update",
