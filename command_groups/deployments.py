@@ -26,7 +26,7 @@ class DeploymentsCreateCommand(ThreeBladesBaseCommand):
                 prompt=True
             ),
             click.Option(
-                param_decls=["--handler", "-i"],
+                param_decls=["--handler", "-k"],
                 help="Handler function",
                 type=str,
                 prompt=True
@@ -219,10 +219,10 @@ class DeploymentsUpdateCommand(ThreeBladesBaseCommand):
             ),
             click.Option(
                 param_decls=["--name", "-o"],
-                help="New name of namespace, if needed"
+                help="New name of deployment, if needed"
             ),
             click.Option(
-                param_decls=["--handler", "-i"],
+                param_decls=["--handler", "-k"],
                 help="Handler function"
             ),
             click.Option(
@@ -259,13 +259,13 @@ class DeploymentsUpdateCommand(ThreeBladesBaseCommand):
 
         name = kwargs.get("name")
         if name is None:
-            name = click.prompt("Name",
+            name = click.prompt("New name of deployment",
                                 type=str,
                                 default=self.deployment.name)
 
         handler = kwargs.get('handler')
         if handler is None:
-            handler = click.prompt("Handler Function",
+            handler = click.prompt("Handler function",
                                    type=str,
                                    default=self.deployment.config['handler'])
 
