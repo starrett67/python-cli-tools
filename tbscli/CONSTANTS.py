@@ -1,9 +1,6 @@
 # For Click Python package
 CLICK_CONTEXT_SETTINGS = dict(help_option_names=['-h', '--help'])
 
-# For Authorization
-API_KEY_PREFIX = 'Bearer'
-
 # For Deployments
 RUNTIME_ALIASES = {
     'python2.7': '04a08704-34a2-45c7-9a5e-1b42faed169a'
