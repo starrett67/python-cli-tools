@@ -85,6 +85,29 @@ class ProjectsDeleteCommand(ThreeBladesBaseCommand):
             return response
 
 
+class ProjectsListCommand(ThreeBladesBaseCommand):
+    def __init__(self):
+        options = [
+            click.Option(
+                param_decls=["--namespace", "-n"],
+                help="Namespace of project",
+                type=str,
+                prompt=True
+            )
+        ]
+        self.context = {}
+        super(ProjectsListCommand, self).__init__(name="list",
+                                                  params=options,
+                                                  help="List all projects in a namespace",
+                                                  api_class=tbs_client.ProjectsApi)
+    def _validate_params(self, *args, **kwargs):
+        return args, kwargs
+
+    def _cmd(self, *args, **kwargs):
+        response = self.api_client.projects_list(namespace=kwargs['namespace'])
+        return response
+
+
 class ProjectsAddUserCommand(ThreeBladesBaseCommand):
     def __init__(self):
         options = [
@@ -142,19 +165,6 @@ class ProjectsRemoveUserCommand(ThreeBladesBaseCommand):
             # print(response)
             pass
 
-# @click.command(help="Delete a project", context_settings=CLICK_CONTEXT_SETTINGS)
-# @click.option("--namespace", "-n", help="Namespace hosting target project")
-# @instantiate_context
-# @print_result
-# def delete(ctx, *args, **kwargs):
-#     namespace = kwargs['namespace']
-#     tbs_client.configuration.api_key['Authorization'] = ctx.obj['token']
-#     tbs_client.configuration.api_key_prefix['Authorization'] = 'Bearer'
-#     project_api = tbs_client.ProjectsApi()
-#     project_name = click.prompt("Name of project to delete", type=str)
-#     click.confirm(f"Are you SURE you want to delete the project {project_name}", abort=True)
-#     response = project_api.projects_delete(namespace, project=project_name)
-#     return response
 #
 # # TODO: Consider combining all these decorators into one. Would be a lot less verbose
 # @click.command(help="Get details about a file in a project", context_settings=CLICK_CONTEXT_SETTINGS)
@@ -169,19 +179,7 @@ class ProjectsRemoveUserCommand(ThreeBladesBaseCommand):
 #     projects_api = tbs_client.ProjectsApi()
 #     response = projects_api.projects_read(namespace, project_name)
 #     return response
-#
-#
-# @click.command(help="List all files in a project", context_settings=CLICK_CONTEXT_SETTINGS)
-# @click.option("--namespace", "-n", help="Namespace hosting target project")
-# @instantiate_context
-# @print_result
-# def list(ctx, *args, **kwargs):
-#     namespace = kwargs.get('namespace') or ctx.obj['namespace']
-#     tbs_client.configuration.api_key['Authorization'] = ctx.obj['token']
-#     tbs_client.configuration.api_key_prefix['Authorization'] = 'Bearer'
-#     projects_api = tbs_client.ProjectsApi()
-#     response = projects_api.projects_list(namespace=namespace)
-#     return response
+
 #
 #
 
