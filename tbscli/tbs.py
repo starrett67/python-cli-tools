@@ -30,7 +30,7 @@ class ThreeBladesCLI(click.Group):
             return login
 
 
-my_cli = ThreeBladesCLI(help="Command line tools for 3Blades", context_settings=CLICK_CONTEXT_SETTINGS)
+my_cli = ThreeBladesCLI(help="3Blades Command Line Tool", context_settings=CLICK_CONTEXT_SETTINGS)
 
 
 def main():
