@@ -44,8 +44,9 @@ class ProjectsCreateCommand(ThreeBladesBaseCommand):
         return args, kwargs
 
     def _cmd(self, *args, **kwargs):
+        click.echo(type(kwargs['project']))
         project_data = tbs_client.ProjectData({
-            'name': kwargs['project'],
+            'name': str(kwargs['project']),
             'description': kwargs['description'],
             'private': kwargs['private']
         })
