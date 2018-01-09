@@ -6,11 +6,12 @@ import inspect
 from pathlib import Path
 from tbscli.decorators import (instantiate_context,
                                print_result)
+from tbscli.CONSTANTS import CLICK_CONTEXT_SETTINGS
 
 
-@click.command(help="Login to 3Blades")
-@click.option("--username")
-@click.option("--password")
+@click.command(help="Login to 3Blades", context_settings=CLICK_CONTEXT_SETTINGS)
+@click.option("--username", "-u", help="3Blades account username")
+@click.option("--password", "-p", help="3Blades account password")
 @instantiate_context
 @print_result
 def login(ctx, *args, **kwargs):
@@ -45,7 +46,7 @@ def login(ctx, *args, **kwargs):
             with open(config_file, "w") as tok_file:
                 tok_file.write(json.dumps(config))
 
-            return f"Welcome, {username}!"
+            return f"User '{username}' successfully logged in."
         else:
             return "Something went wrong with login :/"
 
@@ -61,6 +62,7 @@ class ThreeBladesBaseCommand(click.Command):
         super(ThreeBladesBaseCommand, self).__init__(name=name,
                                                      params=params,
                                                      help=help,
+                                                     context_settings=CLICK_CONTEXT_SETTINGS,
                                                      callback=self._full_command)
         self.context = {}
         home_dir = os.getenv("HOME")

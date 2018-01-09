@@ -34,9 +34,8 @@ class TestLogin(unittest.TestCase):
         # That json.dumps is actually called with. This is guaranteed to be true in python 3.6
         mock_json_dumps.assert_called_with({'token': token, 'namespace': username})
         mock_open.assert_called_with(Path(self.home_dir, ".threeblades.config"), "w")
-        expected_output = f"Username: {username}\nPassword: \nWelcome, {username}!\n"
+        expected_output = f"Username: {username}\nPassword: \nUser '{username}' successfully logged in.\n"
         self.assertEqual(result.output, expected_output)
-
 
 if __name__ == "__main__":
     unittest.main()
