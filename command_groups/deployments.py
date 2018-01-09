@@ -126,9 +126,9 @@ class DeploymentsDeleteCommand(ThreeBladesBaseCommand):
         if click.confirm(text=f"Proceed deleting deployment {deployment}?", abort=True):
             response = self.api_client.deployments_delete(**kwargs)
             if response is None:
-                print(f"Deployment {deployment} deleted successfully.")
+                click.echo(f"Deployment {deployment} deleted successfully.")
             else:
-                print(response)
+                click.echo(response)
 
 
 class DeploymentsDetailsCommand(ThreeBladesBaseCommand):
@@ -164,7 +164,7 @@ class DeploymentsDetailsCommand(ThreeBladesBaseCommand):
 
     def _cmd(self, *args, **kwargs):
         response = self.api_client.deployments_read(**kwargs)
-        print(response)
+        click.echo(response)
 
 
 class DeploymentsListCommand(ThreeBladesBaseCommand):
@@ -194,7 +194,7 @@ class DeploymentsListCommand(ThreeBladesBaseCommand):
 
     def _cmd(self, *args, **kwargs):
         response = self.api_client.deployments_list(**kwargs)
-        print(response)
+        click.echo(response)
 
 
 class DeploymentsUpdateCommand(ThreeBladesBaseCommand):
@@ -256,6 +256,7 @@ class DeploymentsUpdateCommand(ThreeBladesBaseCommand):
         return args, kwargs
 
     def _cmd(self, *args, **kwargs):
+        # The user can (optionally) leave these fields blank
         click.echo("Leave fields blank to maintain their current values.")
 
         name = kwargs.get("name")
@@ -305,10 +306,9 @@ class DeploymentsUpdateCommand(ThreeBladesBaseCommand):
                                                       project=kwargs['project'],
                                                       deployment=kwargs['deployment'],
                                                       deployment_data=deployment_data)
-        print(response)
+        click.echo(response)
 
 
-# TODO: Is there a way to do this with inheritance? We lose context of globals()...
 class DeploymentsCLI(click.Group):
     def __init__(self, *args, **kwargs):
         kwargs['help'] = "Manage model deployments"
