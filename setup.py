@@ -13,7 +13,7 @@ setup(
     name=NAME,
     version=VERSION,
     description="3Blades Command Line Tool",
-    author="John Griebel",
+    author=["John Griebel", "Nathaniel Compton"],
     author_email="jgriebel@3blades.io",
     url="https://github.com/3Blades/python-cli-tools",
     download_url=f'https://github.com/3Blades/python-cli-tools/archive/{VERSION}.tar.gz',

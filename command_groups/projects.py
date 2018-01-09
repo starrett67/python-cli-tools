@@ -44,14 +44,13 @@ class ProjectsCreateCommand(ThreeBladesBaseCommand):
         return args, kwargs
 
     def _cmd(self, *args, **kwargs):
-        click.echo(type(kwargs['project']))
-        project_data = tbs_client.ProjectData({
-            'name': str(kwargs['project']),
+        project_data = tbs_client.ProjectData(**{
+            'name': kwargs['project'],
             'description': kwargs['description'],
             'private': kwargs['private']
         })
         response = self.api_client.projects_create(namespace=kwargs['namespace'], project_data=project_data)
-        return response
+        click.echo(response)
 
 
 class ProjectsDeleteCommand(ThreeBladesBaseCommand):
@@ -82,7 +81,7 @@ class ProjectsDeleteCommand(ThreeBladesBaseCommand):
     def _cmd(self, *args, **kwargs):
         if click.confirm(text=f"Proceed deleting project {kwargs['project']}?", abort=True):
             response = self.api_client.projects_delete(namespace=kwargs['namespace'], project=kwargs['project'])
-            return response
+            click.echo(response)
 
 
 class ProjectsListCommand(ThreeBladesBaseCommand):
@@ -105,7 +104,7 @@ class ProjectsListCommand(ThreeBladesBaseCommand):
 
     def _cmd(self, *args, **kwargs):
         response = self.api_client.projects_list(namespace=kwargs['namespace'])
-        return response
+        click.echo(response)
 
 
 class ProjectsDetailsCommand(ThreeBladesBaseCommand):
@@ -134,7 +133,7 @@ class ProjectsDetailsCommand(ThreeBladesBaseCommand):
 
     def _cmd(self, *args, **kwargs):
         response = self.api_client.projects_read(namespace=kwargs['namespace'], project=kwargs['project'])
-        return response
+        click.echo(response)
 
 
 """
