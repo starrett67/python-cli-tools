@@ -20,7 +20,7 @@ script:
   - coverage report -m
 
 after_success:
-  - export TBS_CLI_VERSION=0.0.11
+  - export TBS_CLI_VERSION=0.1.1
   - bash travis/post_success.sh
 
 notifications:

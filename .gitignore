@@ -1,8 +1,32 @@
-venv/
+# Distribution / packaging
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
 .idea/
-*.swp
+
 testenv/
 __pycache__/
-tbs_cli.egg-info
 .coverage
-dist/
+.DS_Store
+
+# pyenv
+.python-version
+
+# virtualenv
+.venv/
+venv/
+env/
+
+resources/
+static/
+logs/
