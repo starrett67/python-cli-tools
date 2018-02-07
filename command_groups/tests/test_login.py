@@ -8,6 +8,9 @@ from command_groups import login
 from tbs_client.models.jwt import JWT
 from command_groups.tests import generate_random_string
 
+from teamcity import is_running_under_teamcity
+from teamcity.unittestpy import TeamcityTestRunner
+
 
 class TestLogin(unittest.TestCase):
     def setUp(self):
@@ -37,5 +40,9 @@ class TestLogin(unittest.TestCase):
         expected_output = f"Username: {username}\nPassword: \nUser '{username}' successfully logged in.\n"
         self.assertEqual(result.output, expected_output)
 
-if __name__ == "__main__":
-    unittest.main()
+if __name__ == '__main__':
+    if is_running_under_teamcity():
+        runner = TeamcityTestRunner()
+    else:
+        runner = unittest.TextTestRunner()
+    unittest.main(testRunner=runner)
