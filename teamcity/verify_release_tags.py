@@ -23,7 +23,7 @@ def sort_tags(tag):
 def run(proposed_version: str=os.getenv("TBS_CLI_VERSION")):
     gh = Github(os.getenv("GITHUB_TOKEN"))
 
-    repo = gh.get_organization("3blades").get_repo("python-cli-tools")
+    repo = gh.get_organization("IllumiDesk").get_repo("python-cli-tools")
 
     tags = list(repo.get_tags())
     names_only = sorted([t.name for t in tags], key=semver_to_int, reverse=True)
@@ -33,23 +33,20 @@ def run(proposed_version: str=os.getenv("TBS_CLI_VERSION")):
         raise ValueError(f"Proposed version {proposed_version} would not be the highest version.")
     else:
         release_time = datetime.now().isoformat(timespec="seconds") + "-00:00"
-        tagger = github.InputGitAuthor(name="3Blades",
+        tagger = github.InputGitAuthor(name="IllumiDesk",
                                        email="auto-builds@3blades.io",
                                        date=release_time)
         kwargs = dict(tag=proposed_version,
-                      tag_message=os.getenv("TRAVIS_COMMIT_MESSAGE"),
+                      tag_message=os.getenv("COMMIT_MESSAGE"),
                       release_name=proposed_version,
-                      release_message=os.getenv("TRAVIS_COMMIT_MESSAGE"),
-                      object=os.getenv("TRAVIS_COMMIT"),
+                      release_message=os.getenv("COMMIT_MESSAGE"),
+                      object=os.getenv("COMMIT"),
                       type="commit",
                       tagger=tagger,
                       draft=True)
-        if os.getenv("TRAVIS_PULL_REQUEST") != "false":
-            print(f"Would be creating a tag and release with the following values:\n{kwargs}")
-        else:
-            repo.create_git_tag_and_release(**kwargs)
-            print("Successfully created tag and release")
-
+        
+        repo.create_git_tag_and_release(**kwargs)
+        print("Successfully created tag and release")
 
 if __name__ == "__main__":
     run(os.getenv("TBS_CLI_VERSION"))
