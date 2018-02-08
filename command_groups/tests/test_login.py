@@ -8,10 +8,6 @@ from command_groups import login
 from tbs_client.models.jwt import JWT
 from command_groups.tests import generate_random_string
 
-from teamcity import is_running_under_teamcity
-from teamcity.unittestpy import TeamcityTestRunner
-
-
 class TestLogin(unittest.TestCase):
     def setUp(self):
         timestamp = str(datetime.now().timestamp()).replace(".", "")
@@ -41,10 +37,4 @@ class TestLogin(unittest.TestCase):
         self.assertEqual(result.output, expected_output)
 
 if __name__ == '__main__':
-    if is_running_under_teamcity():
-        print("We are running under teamcity. Using teamcity test runner..")
-        runner = TeamcityTestRunner()
-    else:
-        print("Using normal test")
-        runner = unittest.TextTestRunner()
-    unittest.main(testRunner=runner)
+    unittest.main()
