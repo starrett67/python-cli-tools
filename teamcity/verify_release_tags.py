@@ -37,9 +37,9 @@ def run(proposed_version: str=os.getenv("TBS_CLI_VERSION")):
                                        email="auto-builds@3blades.io",
                                        date=release_time)
         kwargs = dict(tag=proposed_version,
-                      tag_message=os.getenv("TRAVIS_COMMIT_MESSAGE"),
+                      tag_message=os.getenv("COMMIT_MESSAGE"),
                       release_name=proposed_version,
-                      release_message=os.getenv("TRAVIS_COMMIT_MESSAGE"),
+                      release_message=os.getenv("COMMIT_MESSAGE"),
                       object=os.getenv("COMMIT"),
                       type="commit",
                       tagger=tagger,
