@@ -40,13 +40,10 @@ def run(proposed_version: str=os.getenv("TBS_CLI_VERSION")):
                       tag_message=os.getenv("TRAVIS_COMMIT_MESSAGE"),
                       release_name=proposed_version,
                       release_message=os.getenv("TRAVIS_COMMIT_MESSAGE"),
-                      object=os.getenv("TRAVIS_COMMIT"),
+                      object=os.getenv("COMMIT"),
                       type="commit",
                       tagger=tagger,
                       draft=True)
-        if os.getenv("TRAVIS_PULL_REQUEST") != "false":
-            print(f"Would be creating a tag and release with the following values:\n{kwargs}")
-        else:
             repo.create_git_tag_and_release(**kwargs)
             print("Successfully created tag and release")
 
