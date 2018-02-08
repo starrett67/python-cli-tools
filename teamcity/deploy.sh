@@ -1,4 +1,5 @@
 python3.6 -m pip install PyGithub
+bash teamcity/pypirc.template.sh
 
 echo "-- Creating git release draft --"
 export COMMIT_MESSAGE=$(git reflog -1 | sed 's/^.*: //')
