@@ -42,6 +42,7 @@ class TestLogin(unittest.TestCase):
 
 if __name__ == '__main__':
     if is_running_under_teamcity():
+        print("We are running under teamcity. Using teamcity test runner..")
         runner = TeamcityTestRunner()
     else:
         runner = unittest.TextTestRunner()
