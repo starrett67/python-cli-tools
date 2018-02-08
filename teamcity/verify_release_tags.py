@@ -44,9 +44,9 @@ def run(proposed_version: str=os.getenv("TBS_CLI_VERSION")):
                       type="commit",
                       tagger=tagger,
                       draft=True)
-            repo.create_git_tag_and_release(**kwargs)
-            print("Successfully created tag and release")
-
+        
+        repo.create_git_tag_and_release(**kwargs)
+        print("Successfully created tag and release")
 
 if __name__ == "__main__":
     run(os.getenv("TBS_CLI_VERSION"))
