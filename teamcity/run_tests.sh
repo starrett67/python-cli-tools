@@ -1,5 +1,5 @@
 python3.6 -m pip install -r requirements.txt
 python3.6 -m pip install coverage
 
-coverage run -m unittest
-coverage report -m
+python3.6 -m coverage run -m unittest
+python3.6 -m coverage report -m

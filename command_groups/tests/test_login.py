@@ -45,6 +45,6 @@ if __name__ == '__main__':
         print("We are running under teamcity. Using teamcity test runner..")
         runner = TeamcityTestRunner()
     else:
-        print("Using normal test runner")
+        print("Using normal test")
         runner = unittest.TextTestRunner()
     unittest.main(testRunner=runner)
